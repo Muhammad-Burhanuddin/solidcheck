@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "940187507737",
+    "project_id": "solidcheck-5e0eb",
+    "storage_bucket": "solidcheck-5e0eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940187507737:android:0f36a8c8538d68b058de88",
+        "android_client_info": {
+          "package_name": "com.example.solidcheck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZHulLbWJgy3k6eDHEYl-sBnFPyQwYmDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
