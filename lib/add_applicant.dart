@@ -328,6 +328,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           ),
                           CustomTextField(
                             controller: firstNameController,
+                            keyboardtype: TextInputType.name,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a valid name'; // Error message
@@ -345,6 +346,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           ),
                           const SizedBox(height: 10),
                           CustomTextField(
+                            keyboardtype: TextInputType.name,
                             controller: lastNameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -395,6 +397,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           ),
                           const SizedBox(height: 10),
                           CustomTextField(
+                            keyboardtype: TextInputType.emailAddress,
                             controller: emailController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -413,6 +416,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           ),
                           const SizedBox(height: 10),
                           CustomTextField(
+                            keyboardtype: TextInputType.number,
                             controller: phoneController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {

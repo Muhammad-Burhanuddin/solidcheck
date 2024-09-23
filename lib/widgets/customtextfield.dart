@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final Color borderColor;
+  final TextInputType? keyboardtype;
   final String? Function(String?)? validator;
 
   const CustomTextField({
@@ -10,6 +11,7 @@ class CustomTextField extends StatefulWidget {
     required this.controller,
     this.borderColor = const Color(0xFFC9C9C9),
     this.validator,
+    this.keyboardtype,
   });
 
   @override
@@ -44,6 +46,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: widget.keyboardtype,
       controller: widget.controller,
       focusNode: focusNode, // Attach the FocusNode
       style: const TextStyle(color: Colors.black, fontSize: 14),
