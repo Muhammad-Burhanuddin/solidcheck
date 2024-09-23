@@ -13,127 +13,159 @@ class _DashboardState extends State<Dashboard> {
   // Keep track of which menu item is selected
   int _selectedIndex = 0;
 
+  final Map<String, String> checkImages = {
+    'SMC': 'assets/sms.png',
+    'RTW': 'assets/rtwc.png',
+    'DBS': 'assets/dbs.png',
+    'ID': 'assets/idcheck.png',
+    'AC': 'assets/fact_check_24d.png',
+    // Add more mappings as needed
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 1,
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Logo
-            Row(
-              children: [
-                Image.asset(
-                  'assets/solid check logo.png', // Your logo image here
-                  height: 40,
-                ),
-                const SizedBox(width: 10),
-              ],
-            ),
-            // Center menu items
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return constraints.maxWidth > 600
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            _buildMenuItem("Dashboard", 0),
-                            _buildMenuItem("Results", 1),
-                            _buildMenuItem("Download Reports", 2),
-                            _buildMenuItem("Job Roles", 3),
-                            _buildMenuItem("Reminders", 4),
-                            _buildMenuItem("Help", 5),
-                          ],
-                        )
-                      : Wrap(
-                          children: [
-                            _buildMenuItem("Dashboard", 0),
-                            _buildMenuItem("Results", 1),
-                            _buildMenuItem("Download Reports", 2),
-                            _buildMenuItem("Job Roles", 3),
-                            _buildMenuItem("Reminders", 4),
-                            _buildMenuItem("Help", 5),
-                          ],
-                        );
-                },
-              ),
-            ),
-            // Profile dropdown on the right
-            PopupMenuButton<int>(
-              offset: const Offset(0, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              itemBuilder: (context) => [
-                const PopupMenuItem<int>(
-                  value: 0,
-                  enabled: false,
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Text('JS'),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('John Smith',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('johnsmith@companyname.co.uk',
-                              style: TextStyle(fontSize: 12)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const PopupMenuDivider(),
-                const PopupMenuItem<int>(
-                    value: 1, child: Text("Manage Account")),
-                const PopupMenuItem<int>(
-                    value: 2, child: Text("Company Profile")),
-                const PopupMenuItem<int>(value: 3, child: Text("Settings")),
-                const PopupMenuItem<int>(
-                    value: 4, child: Text("Notifications")),
-                const PopupMenuDivider(),
-                const PopupMenuItem<int>(
-                  value: 5,
-                  child: Row(
-                    children: [
-                      Icon(Icons.logout, color: Colors.red),
-                      SizedBox(width: 10),
-                      Text("Log Out", style: TextStyle(color: Colors.red)),
-                    ],
-                  ),
+      body: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2), // Shadow color
+                  spreadRadius: 2, // Spread radius
+                  blurRadius: 5, // Blur radius
+                  offset: const Offset(0, 2), // Changes position of shadow
                 ),
               ],
-              onSelected: (value) {
-                if (value == 5) {
-                  // Handle logout action
-                }
-              },
-              child: const Row(
+            ),
+            child: AppBar(
+              elevation: 0,
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    child: Text('JS'),
+                  // Logo
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/solid check logo.png', // Your logo image here
+                        height: 40,
+                      ),
+                      const SizedBox(width: 10),
+                    ],
                   ),
-                  SizedBox(width: 10),
-                  Text('John Smith', style: TextStyle(color: Colors.black)),
-                  Icon(Icons.arrow_drop_down),
+                  // Center menu items
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return constraints.maxWidth > 600
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  _buildMenuItem("Dashboard", 0),
+                                  _buildMenuItem("Results", 1),
+                                  _buildMenuItem("Download Reports", 2),
+                                  _buildMenuItem("Job Roles", 3),
+                                  _buildMenuItem("Reminders", 4),
+                                  _buildMenuItem("Help", 5),
+                                ],
+                              )
+                            : Wrap(
+                                children: [
+                                  _buildMenuItem("Dashboard", 0),
+                                  _buildMenuItem("Results", 1),
+                                  _buildMenuItem("Download Reports", 2),
+                                  _buildMenuItem("Job Roles", 3),
+                                  _buildMenuItem("Reminders", 4),
+                                  _buildMenuItem("Help", 5),
+                                ],
+                              );
+                      },
+                    ),
+                  ),
+                  // Profile dropdown on the right
+                  PopupMenuButton<int>(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    itemBuilder: (context) => [
+                      const PopupMenuItem<int>(
+                        value: 0,
+                        enabled: false,
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              child: Text('JS'),
+                            ),
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('John Smith',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text('johnsmith@companyname.co.uk',
+                                    style: TextStyle(fontSize: 12)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuDivider(),
+                      const PopupMenuItem<int>(
+                          value: 1, child: Text("Manage Account")),
+                      const PopupMenuItem<int>(
+                          value: 2, child: Text("Company Profile")),
+                      const PopupMenuItem<int>(
+                          value: 3, child: Text("Settings")),
+                      const PopupMenuItem<int>(
+                          value: 4, child: Text("Notifications")),
+                      const PopupMenuDivider(),
+                      const PopupMenuItem<int>(
+                        value: 5,
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout, color: Colors.red),
+                            SizedBox(width: 10),
+                            Text("Log Out",
+                                style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                    ],
+                    onSelected: (value) {
+                      if (value == 5) {
+                        // Handle logout action
+                      }
+                    },
+                    child: const Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          child: Text('JS'),
+                        ),
+                        SizedBox(width: 10),
+                        Text('John Smith',
+                            style: TextStyle(color: Colors.black)),
+                        Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          DashboardContent(),
+        ],
       ),
-      body: DashboardContent(),
     );
   }
 
@@ -150,28 +182,44 @@ class _DashboardState extends State<Dashboard> {
           Text(
             title,
             style: TextStyle(
-              color: _selectedIndex == index ? Colors.blue : Colors.black,
+              color: _selectedIndex == index
+                  ? const Color(0xFF004276)
+                  : Colors.black,
+              fontSize: 19,
               fontWeight:
-                  _selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                  _selectedIndex == index ? FontWeight.w400 : FontWeight.w400,
             ),
           ),
           _selectedIndex == index
               ? Container(
-                  margin: const EdgeInsets.only(top: 20.0),
+                  margin: const EdgeInsets.only(top: 5.0),
                   height: 2.0,
-                  width: 60.0,
-                  color: Colors.blue,
+                  width: 100.0,
+                  color: const Color(0xFF004276),
                 )
-              : const SizedBox(height: 20.0),
+              : Container(),
         ],
       ),
     );
   }
 }
 
-class DashboardContent extends StatelessWidget {
+class DashboardContent extends StatefulWidget {
   const DashboardContent({super.key});
 
+  @override
+  State<DashboardContent> createState() => _DashboardContentState();
+}
+
+class _DashboardContentState extends State<DashboardContent> {
+  final Map<String, String> checkImages = {
+    'SMC': 'assets/sms.png',
+    'RTW': 'assets/rtwc.png',
+    'DBS': 'assets/dbs.png',
+    'ID': 'assets/idcheck.png',
+    'AC': 'assets/fact_check_24d.png',
+    // Add more mappings as needed
+  };
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -188,13 +236,15 @@ class DashboardContent extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     buildSummaryCard(
-                        "Total Applicants", "02", Color(0xFF71C1FF)),
-                    buildSummaryCard("In Progress", "03", Color(0xFFBEE2FF)),
+                        "Total Applicants", "02", const Color(0xFF71C1FF)),
                     buildSummaryCard(
-                        "Further Action Pending", "02", Color(0xFF71C1FF)),
+                        "In Progress", "03", const Color(0xFFBEE2FF)),
+                    buildSummaryCard("Further Action Pending", "02",
+                        const Color(0xFF71C1FF)),
                     buildSummaryCard(
-                        "Staff Review Pending", "03", Color(0xFFBEE2FF)),
-                    buildSummaryCard("Completed", "02", Color(0xFF71C1FF)),
+                        "Staff Review Pending", "03", const Color(0xFFBEE2FF)),
+                    buildSummaryCard(
+                        "Completed", "02", const Color(0xFF71C1FF)),
                   ],
                 ),
               ),
@@ -212,11 +262,27 @@ class DashboardContent extends StatelessWidget {
                     width: 600,
                     child: TextField(
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color(0xFFE6EDF3),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide:
+                              const BorderSide(color: Colors.transparent),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
+                          borderSide:
+                              const BorderSide(color: Colors.transparent),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide:
+                              const BorderSide(color: Colors.transparent),
                         ),
                         hintText: "Search for applicant",
-                        suffixIcon: const Icon(Icons.search),
+                        hintStyle: const TextStyle(color: Color(0xFF8E8D8D)),
+                        suffixIcon:
+                            const Icon(Icons.search, color: Color(0xFF8E8D8D)),
                       ),
                     ),
                   ),
@@ -227,9 +293,10 @@ class DashboardContent extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                        color: Color(0xFFE6EDF3),
+                        color: const Color(0xFFE6EDF3),
                         borderRadius: BorderRadius.circular(10)),
                     child: PopupMenuButton(
+                      color: Colors.white,
                       shadowColor: Colors.transparent,
                       icon: const Icon(Icons.format_list_bulleted_rounded),
                       itemBuilder: (context) => [
@@ -315,14 +382,14 @@ class DashboardContent extends StatelessWidget {
               Container(
                 height: 50,
                 decoration: BoxDecoration(
-                    color: Color(0xFF004276),
+                    color: const Color(0xFF004276),
                     borderRadius: BorderRadius.circular(10)),
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => AddApplicantScreen()));
+                            builder: (_) => const AddApplicantScreen()));
                   },
                   icon: const Icon(
                     Icons.add,
@@ -333,7 +400,7 @@ class DashboardContent extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF004276),
+                    backgroundColor: const Color(0xFF004276),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
                     textStyle: const TextStyle(fontSize: 16),
@@ -356,15 +423,39 @@ class DashboardContent extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal, // Enable horizontal scrolling
                 child: DataTable(
-                  columnSpacing: 150, // Custom space between columns
+                  columnSpacing: 120, // Custom space between columns
                   dividerThickness: 0,
                   columns: const [
-                    DataColumn(label: Text("Applicants")),
-                    DataColumn(label: Text("Reference")),
-                    DataColumn(label: Text("Organization")),
-                    DataColumn(label: Text("Date created")),
-                    DataColumn(label: Text("Requested Checks")),
-                    DataColumn(label: Text("Status")),
+                    DataColumn(
+                        label: Text(
+                      "Applicants",
+                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      "Reference",
+                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      "Organization",
+                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      "Date created",
+                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      "Requested Checks",
+                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
+                    )),
+                    DataColumn(
+                        label: Text(
+                      "Status",
+                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
+                    )),
                   ],
                   rows: [
                     buildDataRow(
@@ -372,7 +463,10 @@ class DashboardContent extends StatelessWidget {
                         "638",
                         "companyname",
                         "08/01/2018",
-                        ["SMC", "RTW", "+2"],
+                        [
+                          "SMC",
+                          "RTW",
+                        ],
                         "Not started",
                         Colors.red),
                     buildDataRow(
@@ -455,17 +549,62 @@ class DashboardContent extends StatelessWidget {
       Color statusColor) {
     return DataRow(
       cells: [
-        DataCell(Text(name)),
-        DataCell(Text(reference)),
-        DataCell(Text(organization)),
-        DataCell(Text(dateCreated)),
-        DataCell(Row(
-          children: checks
-              .map((check) => Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Chip(label: Text(check)),
-                  ))
-              .toList(),
+        DataCell(Text(
+          name,
+          style: const TextStyle(
+              color: Color(0xFF282828),
+              fontSize: 19,
+              fontWeight: FontWeight.w400),
+        )),
+        DataCell(Text(
+          reference,
+          style: const TextStyle(
+              color: Color(0xFF282828),
+              fontSize: 19,
+              fontWeight: FontWeight.w400),
+        )),
+        DataCell(Text(
+          organization,
+          style: const TextStyle(
+              color: Color(0xFF282828),
+              fontSize: 19,
+              fontWeight: FontWeight.w400),
+        )),
+        DataCell(Text(
+          dateCreated,
+          style: const TextStyle(
+              color: Color(0xFF282828),
+              fontSize: 19,
+              fontWeight: FontWeight.w400),
+        )),
+        DataCell(Column(
+          children: [
+            Row(
+              children: checks
+                  .map((check) => Padding(
+                        padding: const EdgeInsets.only(right: 5.0, top: 2),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              checkImages[check] ??
+                                  'assets/default.png', // Default image if check not found
+                              width: 20,
+                              height: 20,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              check,
+                              style: TextStyle(
+                                  color: Color(0xFF004276),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ],
         )),
         DataCell(Container(
           padding: const EdgeInsets.all(8.0),

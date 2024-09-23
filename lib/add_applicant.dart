@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/customtextfield.dart';
@@ -10,6 +11,56 @@ class AddApplicantScreen extends StatefulWidget {
 }
 
 class _AddApplicantScreenState extends State<AddApplicantScreen> {
+  Future<void> saveApplicantData() async {
+    final firstName = firstNameController.text.trim();
+    final lastName = lastNameController.text.trim();
+    final phone = phoneController.text.trim();
+    final email = emailController.text.trim();
+    final role = selectedRole;
+
+    if (firstName.isEmpty ||
+        lastName.isEmpty ||
+        phone.isEmpty ||
+        email.isEmpty ||
+        role == null) {
+      // Show an error dialog
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Please fill in all fields.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    // Create a map to store the applicant's data
+    final applicantData = {
+      'first_name': firstName,
+      'last_name': lastName,
+      'phone': phone,
+      'email': email,
+      'job_role': role,
+      'selected_products': getSelectedProducts(),
+      'total_price': getTotalPrice(),
+    };
+
+    // Save to Firestore
+    await FirebaseFirestore.instance
+        .collection('applicants')
+        .add(applicantData);
+  }
+
   String? selectedRole;
 
   // List of product options with selection status and price
@@ -63,6 +114,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
       'isSelected': false
     },
   ];
+  int _selectedIndex = 0;
 
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -90,12 +142,121 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Applicant Details'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Logo
+            Row(
+              children: [
+                Image.asset(
+                  'assets/solid check logo.png', // Your logo image here
+                  height: 40,
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+            // Center menu items
+            const SizedBox(
+              width: 30,
+            ),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return constraints.maxWidth > 600
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _buildMenuItem("Dashboard", 0),
+                            _buildMenuItem("Results", 1),
+                            _buildMenuItem("Download Reports", 2),
+                            _buildMenuItem("Job Roles", 3),
+                            _buildMenuItem("Reminders", 4),
+                            _buildMenuItem("Help", 5),
+                          ],
+                        )
+                      : Wrap(
+                          children: [
+                            _buildMenuItem("Dashboard", 0),
+                            _buildMenuItem("Results", 1),
+                            _buildMenuItem("Download Reports", 2),
+                            _buildMenuItem("Job Roles", 3),
+                            _buildMenuItem("Reminders", 4),
+                            _buildMenuItem("Help", 5),
+                          ],
+                        );
+                },
+              ),
+            ),
+            // Profile dropdown on the right
+            PopupMenuButton<int>(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              itemBuilder: (context) => [
+                const PopupMenuItem<int>(
+                  value: 0,
+                  enabled: false,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Text('JS'),
+                      ),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('John Smith',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('johnsmith@companyname.co.uk',
+                              style: TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const PopupMenuDivider(),
+                const PopupMenuItem<int>(
+                    value: 1, child: Text("Manage Account")),
+                const PopupMenuItem<int>(
+                    value: 2, child: Text("Company Profile")),
+                const PopupMenuItem<int>(value: 3, child: Text("Settings")),
+                const PopupMenuItem<int>(
+                    value: 4, child: Text("Notifications")),
+                const PopupMenuDivider(),
+                const PopupMenuItem<int>(
+                  value: 5,
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout, color: Colors.red),
+                      SizedBox(width: 10),
+                      Text("Log Out", style: TextStyle(color: Colors.red)),
+                    ],
+                  ),
+                ),
+              ],
+              onSelected: (value) {
+                if (value == 5) {
+                  // Handle logout action
+                }
+              },
+              child: const Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text('JS'),
+                  ),
+                  SizedBox(width: 10),
+                  Text('John Smith', style: TextStyle(color: Colors.black)),
+                  Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(
@@ -305,7 +466,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
 
                   const SizedBox(height: 10),
 
-                  Divider(
+                  const Divider(
                     color: Colors.black,
                     thickness: 1.0,
                   ),
@@ -331,17 +492,50 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Start application logic
-                        },
-                        child: const Text('Start Application'),
+                      Container(
+                        width: 300,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color(0xFF004276),
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Add Application',
+                            style: TextStyle(
+                                color: Color(0xFF004276),
+                                fontSize: 19,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Send form to applicant logic
+                      GestureDetector(
+                        onTap: () {
+                          saveApplicantData();
                         },
-                        child: const Text('Send form to applicant'),
+                        child: Container(
+                          width: 300,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xFF004276),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Send Form to Applicant',
+                              style: TextStyle(
+                                  color: Color(0xFF004276),
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -354,40 +548,73 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
     );
   }
 
-  Widget buildProductCard(
-      String image, String title, double price, bool isSelected) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.blue[50] : const Color(0xFFF1F9FF),
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(
-          color: isSelected ? const Color(0xFF004276) : Colors.transparent,
-          width: isSelected ? 2.0 : 1.0,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListTile(
-          leading: Container(
-            height: 300,
-            child: Image.asset(
-              image,
-            ),
-          ),
-          title: Text(
+  Widget _buildMenuItem(String title, int index) {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      child: Column(
+        children: [
+          Text(
             title,
             style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF282828),
+              color: _selectedIndex == index
+                  ? const Color(0xFF004276)
+                  : Colors.black,
+              fontSize: 19,
+              fontWeight:
+                  _selectedIndex == index ? FontWeight.w400 : FontWeight.w400,
             ),
           ),
-          subtitle: Text(
-            'Price: $price',
-            style: TextStyle(color: Color(0XFF5485AB)),
-          ),
-        ),
+          _selectedIndex == index
+              ? Container(
+                  margin: const EdgeInsets.only(top: 5.0),
+                  height: 2.0,
+                  width: 100.0,
+                  color: const Color(0xFF004276),
+                )
+              : Container(),
+        ],
       ),
     );
   }
+}
+
+Widget buildProductCard(
+    String image, String title, double price, bool isSelected) {
+  return Container(
+    decoration: BoxDecoration(
+      color: isSelected ? Colors.blue[50] : const Color(0xFFF1F9FF),
+      borderRadius: BorderRadius.circular(10.0),
+      border: Border.all(
+        color: isSelected ? const Color(0xFF004276) : Colors.transparent,
+        width: isSelected ? 2.0 : 1.0,
+      ),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListTile(
+        leading: Container(
+          height: 300,
+          child: Image.asset(
+            image,
+          ),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF282828),
+          ),
+        ),
+        subtitle: Text(
+          'Price: $price',
+          style: const TextStyle(color: Color(0XFF5485AB)),
+        ),
+      ),
+    ),
+  );
 }
