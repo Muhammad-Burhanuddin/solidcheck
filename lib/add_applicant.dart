@@ -328,6 +328,12 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           ),
                           CustomTextField(
                             controller: firstNameController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a valid name'; // Error message
+                              }
+                              return null; // Return null if the input is valid
+                            },
                           ),
                           const SizedBox(height: 16),
                           const Text(
@@ -340,6 +346,12 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           const SizedBox(height: 10),
                           CustomTextField(
                             controller: lastNameController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a valid name'; // Error message
+                              }
+                              return null; // Return null if the input is valid
+                            },
                           ),
                           const SizedBox(height: 16),
                           const Text(
@@ -384,6 +396,12 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           const SizedBox(height: 10),
                           CustomTextField(
                             controller: emailController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a valid Email'; // Error message
+                              }
+                              return null; // Return null if the input is valid
+                            },
                           ),
                           const SizedBox(height: 16),
                           const Text(
@@ -396,6 +414,12 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                           const SizedBox(height: 10),
                           CustomTextField(
                             controller: phoneController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a valid Phone'; // Error message
+                              }
+                              return null; // Return null if the input is valid
+                            },
                           ),
                           const SizedBox(height: 16),
                         ],

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final Color borderColor;
+  final String? Function(String?)? validator;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.controller,
     this.borderColor = const Color(0xFFC9C9C9),
-  }) : super(key: key);
+    this.validator,
+  });
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -41,7 +43,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: widget.controller,
       focusNode: focusNode, // Attach the FocusNode
       style: const TextStyle(color: Colors.black, fontSize: 14),
@@ -57,6 +59,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         fillColor: currentFillColor,
         filled: true,
       ),
+      validator: widget.validator,
     );
   }
 }
