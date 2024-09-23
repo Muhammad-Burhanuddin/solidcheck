@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+import 'widgets/customtextfield.dart';
 
 class AddApplicantScreen extends StatefulWidget {
   const AddApplicantScreen({super.key});
@@ -9,17 +10,85 @@ class AddApplicantScreen extends StatefulWidget {
 }
 
 class _AddApplicantScreenState extends State<AddApplicantScreen> {
-  // List of product options with selection status
+  String? selectedRole;
+
+  // List of product options with selection status and price
   final List<Map<String, dynamic>> products = [
-    {'title': 'DBS - Basic Check', 'price': '12£', 'isSelected': false},
-    {'title': 'DBS - Standard Check', 'price': '12£', 'isSelected': false},
-    {'title': 'DBS - Enhanced Check', 'price': '12£', 'isSelected': false},
-    {'title': 'Reference Check', 'price': '12£', 'isSelected': false},
+    {
+      'image': 'assets/dbs.png',
+      'title': 'DBS - Basic Check',
+      'price': 12.0,
+      'isSelected': false
+    },
+    {
+      'image': 'assets/dbs.png',
+      'title': 'DBS - Standard Check',
+      'price': 32.0,
+      'isSelected': false
+    },
+    {
+      'image': 'assets/dbs.png',
+      'title': 'DBS - Enhanced Check',
+      'price': 50.0,
+      'isSelected': false
+    },
+    {
+      'image': 'assets/referencecheck.png',
+      'title': 'Reference Check',
+      'price': 20.0,
+      'isSelected': false
+    },
+    {
+      'image': 'assets/dbs.png',
+      'title': 'DBS - Basic Check',
+      'price': 12.0,
+      'isSelected': false
+    },
+    {
+      'image': 'assets/dbs.png',
+      'title': 'DBS - Standard Check',
+      'price': 32.0,
+      'isSelected': false
+    },
+    {
+      'image': 'assets/dbs.png',
+      'title': 'DBS - Enhanced Check',
+      'price': 50.0,
+      'isSelected': false
+    },
+    {
+      'image': 'assets/referencecheck.png',
+      'title': 'Reference Check',
+      'price': 20.0,
+      'isSelected': false
+    },
   ];
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
+  // Calculate total price
+  double getTotalPrice() {
+    double total = 0.0;
+    for (var product in products) {
+      if (product['isSelected']) {
+        total += product['price'];
+      }
+    }
+    return total;
+  }
+
+  // Get list of selected products
+  List<Map<String, dynamic>> getSelectedProducts() {
+    return products.where((product) => product['isSelected']).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Applicant Details'),
         leading: IconButton(
@@ -39,88 +108,138 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Applicant Details',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.arrow_back,
+                          size: 18,
+                          color: Color(0xFF004276),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          'Applicant Details',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF004276),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 20),
-
-                  // First Name
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'First Name *',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                  const SizedBox(height: 40),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFAF9F9),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'First Name: *',
+                            style: TextStyle(
+                                color: Color(0xFF282828),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          CustomTextField(
+                            controller: firstNameController,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Last Name: *',
+                            style: TextStyle(
+                                color: Color(0xFF282828),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 10),
+                          CustomTextField(
+                            controller: lastNameController,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Job Role: *',
+                            style: TextStyle(
+                                color: Color(0xFF282828),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 10),
+                          CustomDropdown(
+                            labelText: 'Job Role',
+                            value: selectedRole,
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'Role 1',
+                                child: Text('Role 1'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Role 2',
+                                child: Text('Role 2'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Role 3',
+                                child: Text('Role 3'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedRole = value;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Email: *',
+                            style: TextStyle(
+                                color: Color(0xFF282828),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 10),
+                          CustomTextField(
+                            controller: emailController,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Phone: *',
+                            style: TextStyle(
+                                color: Color(0xFF282828),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 10),
+                          CustomTextField(
+                            controller: phoneController,
+                          ),
+                          const SizedBox(height: 16),
+                        ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-
-                  // Last Name
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Last Name *',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Job Role (Dropdown)
-                  DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Job Role',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'Role 1',
-                        child: Text('Role 1'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Role 2',
-                        child: Text('Role 2'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Role 3',
-                        child: Text('Role 3'),
-                      ),
-                    ],
-                    onChanged: (value) {},
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Email Address
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Email Address *',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Phone Number
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Phone Number *',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                 ],
               ),
             ),
 
             const SizedBox(width: 20),
 
-            // Right Section: Products (Scrollable with Selection)
+            // Right Section: Products (with Selection and Total)
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +258,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
-                        childAspectRatio: 1.2,
+                        childAspectRatio: 4,
                       ),
                       itemCount: products.length,
                       itemBuilder: (context, index) {
@@ -151,6 +270,7 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                             });
                           },
                           child: buildProductCard(
+                            product['image'],
                             product['title'],
                             product['price'],
                             product['isSelected'],
@@ -158,6 +278,72 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                         );
                       },
                     ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Display Selected Items and Total
+                  const Text(
+                    'Selected Items:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: getSelectedProducts().map((product) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(product['title']),
+                            Text('${product['price']}£'),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Divider(
+                    color: Colors.black,
+                    thickness: 1.0,
+                  ),
+
+                  // Display Total
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Total:',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Text('${getTotalPrice()}£',
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Buttons: Start Application and Send Form
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // Start application logic
+                        },
+                        child: const Text('Start Application'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Send form to applicant logic
+                        },
+                        child: const Text('Send form to applicant'),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -168,57 +354,40 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
     );
   }
 
-  Widget buildProductCard(String title, String price, bool isSelected) {
-    return Stack(
-      children: [
-        Container(
-          height: 150,
-          width: 300,
-          decoration: BoxDecoration(
-              color: isSelected ? Colors.blue[50] : Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                color: isSelected ? Colors.blue.shade700 : Colors.grey.shade300,
-                width: isSelected ? 2.0 : 1.0,
-              )),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 24), // Space for the icon
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isSelected ? Colors.blue.shade700 : Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Price: $price',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
+  Widget buildProductCard(
+      String image, String title, double price, bool isSelected) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.blue[50] : const Color(0xFFF1F9FF),
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+          color: isSelected ? const Color(0xFF004276) : Colors.transparent,
+          width: isSelected ? 2.0 : 1.0,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListTile(
+          leading: Container(
+            height: 300,
+            child: Image.asset(
+              image,
             ),
           ),
-        ),
-        Positioned(
-          top: -10, // Adjust this value to position the icon on the border
-          left: -10, // Adjust this value as per your requirement
-          child: CircleAvatar(
-            backgroundColor: isSelected ? Colors.blue.shade700 : Colors.grey,
-            radius: 14,
-            child: Icon(
-              isSelected ? Icons.abc : Icons.check_circle,
-              color: Colors.white,
-              size: 20,
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF282828),
             ),
           ),
+          subtitle: Text(
+            'Price: $price',
+            style: TextStyle(color: Color(0XFF5485AB)),
+          ),
         ),
-      ],
+      ),
     );
   }
 }

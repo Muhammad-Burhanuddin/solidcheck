@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'solidcheck-5e0eb.appspot.com',
     measurementId: 'G-W4JJ3XRBC1',
   );
+
 }

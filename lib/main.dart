@@ -5,16 +5,20 @@ import 'package:solidcheck/firebase_options.dart';
 import 'dashbaord.dart';
 
 void main() async {
+  // Ensure Flutter bindings are initialized first
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
