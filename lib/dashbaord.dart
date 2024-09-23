@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:solidcheck/applicantsmodels.dart';
+import 'package:solidcheck/firestorservices.dart';
 import 'add_applicant.dart';
 
 class Dashboard extends StatefulWidget {
@@ -19,6 +21,8 @@ class _DashboardState extends State<Dashboard> {
     'DBS': 'assets/dbs.png',
     'ID': 'assets/idcheck.png',
     'AC': 'assets/fact_check_24d.png',
+    'ACC': 'assets/acc.png'
+        ''
     // Add more mappings as needed
   };
 
@@ -212,6 +216,8 @@ class DashboardContent extends StatefulWidget {
 }
 
 class _DashboardContentState extends State<DashboardContent> {
+  final FirestoreService firestoreService = FirestoreService();
+
   final Map<String, String> checkImages = {
     'SMC': 'assets/sms.png',
     'RTW': 'assets/rtwc.png',
@@ -411,84 +417,84 @@ class _DashboardContentState extends State<DashboardContent> {
           ),
           const SizedBox(height: 20),
 
-          // Responsive Data Table with Light Grey Background
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(
-                  255, 244, 244, 244), // Light grey background
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal, // Enable horizontal scrolling
-                child: DataTable(
-                  columnSpacing: 120, // Custom space between columns
-                  dividerThickness: 0,
-                  columns: const [
-                    DataColumn(
-                        label: Text(
-                      "Applicants",
-                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      "Reference",
-                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      "Organization",
-                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      "Date created",
-                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      "Requested Checks",
-                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      "Status",
-                      style: TextStyle(color: Color(0xFF004276), fontSize: 19),
-                    )),
-                  ],
-                  rows: [
-                    buildDataRow(
-                        "Eduardo Vieira",
-                        "638",
-                        "companyname",
-                        "08/01/2018",
-                        [
-                          "SMC",
-                          "RTW",
-                        ],
-                        "Not started",
-                        Colors.red),
-                    buildDataRow(
-                        "Eduarda Martins",
-                        "770",
-                        "companyname",
-                        "28/12/2018",
-                        ["DBS", "ID"],
-                        "With applicant",
-                        Colors.amber),
-                    buildDataRow("Alice Silva", "649", "companyname",
-                        "12/08/2018", ["AC"], "With Employer", Colors.amber),
-                    buildDataRow("Pedro Almeida", "774", "companyname",
-                        "13/10/2018", ["ID", "AC"], "Processing", Colors.amber),
-                    buildDataRow("Thiago Pereira", "417", "companyname",
-                        "24/08/2018", ["ID"], "Done", Colors.green),
-                    buildDataRow("Henrique Barbosa", "642", "companyname",
-                        "18/06/2018", ["AC"], "Done", Colors.green),
-                  ],
+          FutureBuilder<List<ApplicantsModels>>(
+            future: firestoreService.fetchApplicants(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return const Center(child: Text('Error fetching data'));
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No applicants found'));
+              }
+
+              // List of applicants
+              List<ApplicantsModels> applicants = snapshot.data!;
+
+              // Responsive Data Table with Light Grey Background
+              return Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(
+                      255, 244, 244, 244), // Light grey background
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-            ),
+                child: Center(
+                  child: SingleChildScrollView(
+                    scrollDirection:
+                        Axis.horizontal, // Enable horizontal scrolling
+                    child: DataTable(
+                      columnSpacing: 100, // Custom space between columns
+                      dividerThickness: 0,
+                      columns: const [
+                        DataColumn(
+                            label: Text(
+                          "Applicants",
+                          style:
+                              TextStyle(color: Color(0xFF004276), fontSize: 19),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Reference",
+                          style:
+                              TextStyle(color: Color(0xFF004276), fontSize: 19),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Phone",
+                          style:
+                              TextStyle(color: Color(0xFF004276), fontSize: 19),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Company Role",
+                          style:
+                              TextStyle(color: Color(0xFF004276), fontSize: 19),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Requested Checks",
+                          style:
+                              TextStyle(color: Color(0xFF004276), fontSize: 19),
+                        )),
+                        DataColumn(
+                            label: Text(
+                          "Status",
+                          style:
+                              TextStyle(color: Color(0xFF004276), fontSize: 19),
+                        )),
+                      ],
+                      rows: applicants
+                          .map((applicant) => buildDataRow(applicant))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -539,82 +545,157 @@ class _DashboardContentState extends State<DashboardContent> {
   }
 
   // Helper function to build each data row
-  DataRow buildDataRow(
-      String name,
-      String reference,
-      String organization,
-      String dateCreated,
-      List<String> checks,
-      String status,
-      Color statusColor) {
+  DataRow buildDataRow(ApplicantsModels applicant) {
     return DataRow(
       cells: [
         DataCell(Text(
-          name,
+          '${applicant.firstName} ${applicant.lastName}',
           style: const TextStyle(
-              color: Color(0xFF282828),
-              fontSize: 19,
-              fontWeight: FontWeight.w400),
+            color: Color(0xFF282828),
+            fontSize: 19,
+            fontWeight: FontWeight.w400,
+          ),
         )),
         DataCell(Text(
-          reference,
+          applicant.email ?? 'N/A',
           style: const TextStyle(
-              color: Color(0xFF282828),
-              fontSize: 19,
-              fontWeight: FontWeight.w400),
+            color: Color(0xFF282828),
+            fontSize: 19,
+            fontWeight: FontWeight.w400,
+          ),
         )),
         DataCell(Text(
-          organization,
+          applicant.phone ?? 'N/A',
           style: const TextStyle(
-              color: Color(0xFF282828),
-              fontSize: 19,
-              fontWeight: FontWeight.w400),
+            color: Color(0xFF282828),
+            fontSize: 19,
+            fontWeight: FontWeight.w400,
+          ),
         )),
         DataCell(Text(
-          dateCreated,
+          applicant.jobRole ?? 'N/A',
           style: const TextStyle(
-              color: Color(0xFF282828),
-              fontSize: 19,
-              fontWeight: FontWeight.w400),
+            color: Color(0xFF282828),
+            fontSize: 19,
+            fontWeight: FontWeight.w400,
+          ),
         )),
-        DataCell(Column(
-          children: [
-            Row(
-              children: checks
-                  .map((check) => Padding(
-                        padding: const EdgeInsets.only(right: 5.0, top: 2),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              checkImages[check] ??
-                                  'assets/default.png', // Default image if check not found
-                              width: 20,
-                              height: 20,
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              check,
-                              style: TextStyle(
-                                  color: Color(0xFF004276),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
+        DataCell(Row(
+          children: applicant.selectedProducts != null
+              ? applicant.selectedProducts!.map((product) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 5.0, top: 2),
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          product.image ??
+                              'assets/verified_24.png', // Default image if check not found
+                          width: 20,
+                          height: 20,
                         ),
-                      ))
-                  .toList(),
-            ),
-          ],
+                        const SizedBox(height: 2),
+                        Text(
+                          product.subtitle ?? 'DBS',
+                          style: TextStyle(
+                              color: Color(0xFF004276),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList()
+              : [const Text('No products selected')],
         )),
         DataCell(Container(
-          padding: const EdgeInsets.all(8.0),
+          height: 30,
+          width: 150,
           decoration: BoxDecoration(
-            color: statusColor.withOpacity(0.2),
+            color: Color(0xFFFFB0AB),
             borderRadius: BorderRadius.circular(5),
           ),
-          child: Text(status, style: TextStyle(color: statusColor)),
+          child: Center(
+            child: Text("Not Approved",
+                style: TextStyle(
+                    color: Color(0xFF282828),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400)),
+          ),
         )),
       ],
     );
   }
 }
+
+// DataRow buildDataRow(String name, String reference, String organization,
+//     String dateCreated, List<String> checks, String status, Color statusColor) {
+//   return DataRow(
+//     cells: [
+//       DataCell(Text(
+//         name,
+//         style: const TextStyle(
+//             color: Color(0xFF282828),
+//             fontSize: 19,
+//             fontWeight: FontWeight.w400),
+//       )),
+//       DataCell(Text(
+//         reference,
+//         style: const TextStyle(
+//             color: Color(0xFF282828),
+//             fontSize: 19,
+//             fontWeight: FontWeight.w400),
+//       )),
+//       DataCell(Text(
+//         organization,
+//         style: const TextStyle(
+//             color: Color(0xFF282828),
+//             fontSize: 19,
+//             fontWeight: FontWeight.w400),
+//       )),
+//       DataCell(Text(
+//         dateCreated,
+//         style: const TextStyle(
+//             color: Color(0xFF282828),
+//             fontSize: 19,
+//             fontWeight: FontWeight.w400),
+//       )),
+//       DataCell(Column(
+//         children: [
+//           Row(
+//             children: checks
+//                 .map((check) => Padding(
+//                       padding: const EdgeInsets.only(right: 5.0, top: 2),
+//                       child: Column(
+//                         children: [
+//                           Image.asset(
+//                             checkImages[check] ??
+//                                 'assets/default.png', // Default image if check not found
+//                             width: 20,
+//                             height: 20,
+//                           ),
+//                           const SizedBox(height: 2),
+//                           Text(
+//                             check,
+//                             style: TextStyle(
+//                                 color: Color(0xFF004276),
+//                                 fontSize: 13,
+//                                 fontWeight: FontWeight.w500),
+//                           ),
+//                         ],
+//                       ),
+//                     ))
+//                 .toList(),
+//           ),
+//         ],
+//       )),
+//       DataCell(Container(
+//         padding: const EdgeInsets.all(8.0),
+//         decoration: BoxDecoration(
+//           color: statusColor.withOpacity(0.2),
+//           borderRadius: BorderRadius.circular(5),
+//         ),
+//         child: Text(status, style: TextStyle(color: statusColor)),
+//       )),
+//     ],
+//   );
+// }

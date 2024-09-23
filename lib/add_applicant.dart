@@ -68,49 +68,57 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
     {
       'image': 'assets/dbs.png',
       'title': 'DBS - Basic Check',
+      'subtitle': 'DBS',
       'price': 12.0,
       'isSelected': false
     },
     {
       'image': 'assets/dbs.png',
       'title': 'DBS - Standard Check',
+      'subtitle': 'DBS',
       'price': 32.0,
       'isSelected': false
     },
     {
       'image': 'assets/dbs.png',
       'title': 'DBS - Enhanced Check',
+      'subtitle': 'DBS',
       'price': 50.0,
       'isSelected': false
     },
     {
       'image': 'assets/referencecheck.png',
       'title': 'Reference Check',
+      'subtitle': 'RTW',
       'price': 20.0,
       'isSelected': false
     },
     {
       'image': 'assets/dbs.png',
       'title': 'DBS - Basic Check',
+      'subtitle': 'DBS',
       'price': 12.0,
       'isSelected': false
     },
     {
       'image': 'assets/dbs.png',
-      'title': 'DBS - Standard Check',
+      'title': 'Wrtie to Work Check',
+      'subtitle': 'RTW',
       'price': 32.0,
       'isSelected': false
     },
     {
-      'image': 'assets/dbs.png',
-      'title': 'DBS - Enhanced Check',
+      'image': 'assets/acc.png',
+      'title': 'Advertise Crediet Check',
+      'subtitle': 'ACC',
       'price': 50.0,
       'isSelected': false
     },
     {
-      'image': 'assets/referencecheck.png',
-      'title': 'Reference Check',
-      'price': 20.0,
+      'image': 'assets/idcheck.png',
+      'title': 'ID Check',
+      'subtitle': 'ID',
+      'price': 12.0,
       'isSelected': false
     },
   ];

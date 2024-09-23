@@ -17,7 +17,7 @@ class ApplicantsModels {
   String? lastName;
   String? phone;
   List<SelectedProduct>? selectedProducts;
-  int? totalPrice;
+  num? totalPrice;
 
   ApplicantsModels({
     this.email,
@@ -59,15 +59,12 @@ class ApplicantsModels {
 class SelectedProduct {
   String? image;
   bool? isSelected;
-  int? price;
+  num? price;
   String? title;
+  String? subtitle;
 
-  SelectedProduct({
-    this.image,
-    this.isSelected,
-    this.price,
-    this.title,
-  });
+  SelectedProduct(
+      {this.image, this.isSelected, this.price, this.title, this.subtitle});
 
   factory SelectedProduct.fromJson(Map<String, dynamic> json) =>
       SelectedProduct(
@@ -75,6 +72,7 @@ class SelectedProduct {
         isSelected: json["isSelected"],
         price: json["price"],
         title: json["title"],
+        subtitle: json["subtitle"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -82,5 +80,6 @@ class SelectedProduct {
         "isSelected": isSelected,
         "price": price,
         "title": title,
+        'subtitle': subtitle,
       };
 }
