@@ -285,14 +285,6 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.arrow_back,
-                          size: 18,
-                          color: Color(0xFF004276),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
                         Text(
                           'Applicant Details',
                           style: TextStyle(
@@ -369,16 +361,12 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
                             value: selectedRole,
                             items: const [
                               DropdownMenuItem(
-                                value: 'Role 1',
-                                child: Text('Role 1'),
+                                value: 'Manager',
+                                child: Text('Manager'),
                               ),
                               DropdownMenuItem(
-                                value: 'Role 2',
-                                child: Text('Role 2'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'Role 3',
-                                child: Text('Role 3'),
+                                value: 'Software Engineer',
+                                child: Text('Software Engineer'),
                               ),
                             ],
                             onChanged: (value) {
@@ -620,37 +608,54 @@ class _AddApplicantScreenState extends State<AddApplicantScreen> {
 
 Widget buildProductCard(
     String image, String title, double price, bool isSelected) {
-  return Container(
-    decoration: BoxDecoration(
-      color: isSelected ? Colors.blue[50] : const Color(0xFFF1F9FF),
-      borderRadius: BorderRadius.circular(10.0),
-      border: Border.all(
-        color: isSelected ? const Color(0xFF004276) : Colors.transparent,
-        width: isSelected ? 2.0 : 1.0,
-      ),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListTile(
-        leading: Container(
-          height: 300,
-          child: Image.asset(
-            image,
+  return Stack(
+    children: [
+      // Main card container
+      Container(
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue[50] : const Color(0xFFF1F9FF),
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF004276) : Colors.transparent,
+            width: isSelected ? 2.0 : 1.0,
           ),
         ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF282828),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            leading: SizedBox(
+              height: 300,
+              child: Image.asset(
+                image,
+              ),
+            ),
+            title: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF282828),
+              ),
+            ),
+            subtitle: Text(
+              'Price: $price',
+              style: const TextStyle(color: Color(0XFF5485AB)),
+            ),
           ),
         ),
-        subtitle: Text(
-          'Price: $price',
-          style: const TextStyle(color: Color(0XFF5485AB)),
-        ),
       ),
-    ),
+      // Checkbox on the top right corner, inside the container
+      if (isSelected)
+        Positioned(
+          top: 0,
+          right: 0,
+          child: const Icon(
+            Icons.check_circle,
+            color: Color(0xFF004276),
+
+            size: 20, // Checkbox size
+          ),
+        ),
+    ],
   );
 }

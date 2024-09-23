@@ -237,6 +237,7 @@ class _DashboardContentState extends State<DashboardContent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Summary Cards
+
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -438,8 +439,7 @@ class _DashboardContentState extends State<DashboardContent> {
               return Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(
-                      255, 244, 244, 244), // Light grey background
+                  color: Color(0xffF7F7F7),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
@@ -447,8 +447,9 @@ class _DashboardContentState extends State<DashboardContent> {
                     scrollDirection:
                         Axis.horizontal, // Enable horizontal scrolling
                     child: DataTable(
-                      columnSpacing: 100, // Custom space between columns
+                      columnSpacing: 90, // Custom space between columns
                       dividerThickness: 0,
+
                       columns: const [
                         DataColumn(
                             label: Text(
